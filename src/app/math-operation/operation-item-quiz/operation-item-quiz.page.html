@@ -1,0 +1,106 @@
+<ion-content>
+  <ion-row>
+    <ion-col size="10" offset="1">
+      <ion-progress-bar
+        color="primary"
+        value="{{progressValue}}"
+        style="margin-top: 20px"
+      ></ion-progress-bar>
+    </ion-col>
+    <ion-col size="2" offset="5">
+      <ion-badge color="primary" style="margin-top: 2px"
+        >{{nbrQuestionPassed}} / 10</ion-badge
+      >
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="2" offset="4">
+      <ion-fab-button color="success" style="margin-top: 40px" size="large"
+        >{{countNbrCorrect}}</ion-fab-button
+      >
+    </ion-col>
+    <ion-col size="2" offset="0">
+      <ion-fab-button
+        color="danger"
+        style="margin-top: 40px"
+        size="large"
+        class="ion-text-center"
+        >{{countNbrNotCorrect}}</ion-fab-button
+      >
+    </ion-col>
+  </ion-row>
+  <ion-row style="margin-top: 20px">
+    <ion-col size="10" offset="1">
+      <ion-button expand="block" size="large" fill="outline" padding>
+        {{value1}} {{operation}} {{value2}}=?
+      </ion-button>
+    </ion-col>
+  </ion-row>
+  <ion-row style="margin-top: 30px">
+    <!---col1-->
+    <ion-col size="2" offset="2">
+      <ion-button
+        id="responseList[0].id"
+        color="medium"
+        shape="round"
+        size="large"
+        style="width: 100px"
+        (click)="checkIfCorrectAnsewrs(responseList[0].value)"
+        >{{responseList[0].value}}</ion-button
+      >
+    </ion-col>
+
+    <ion-col size="3"></ion-col>
+    <!---col2-->
+    <ion-col size="2">
+      <ion-button
+        id="responseList[1].id"
+        shape="round"
+        color="medium"
+        size="large"
+        style="width: 100px"
+        (click)="checkIfCorrectAnsewrs(responseList[1].value)"
+        >{{responseList[1].value}}</ion-button
+      >
+    </ion-col>
+
+    <ion-col size="3"></ion-col>
+
+    <!---col3-->
+    <ion-col size="2" offset="2">
+      <ion-button
+        id="responseList[2].id"
+        shape="round"
+        color="medium"
+        size="large"
+        style="width: 100px"
+        (click)="checkIfCorrectAnsewrs(responseList[2].value)"
+        >{{responseList[2].value}}</ion-button
+      >
+    </ion-col>
+
+    <ion-col size="3"></ion-col>
+    <!---col4-->
+    <ion-col size="2">
+      <ion-button
+        id="responseList[3].id"
+        shape="round"
+        color="medium"
+        size="large"
+        style="width: 100px"
+        (click)="checkIfCorrectAnsewrs(responseList[3].value)"
+        >{{responseList[3].value}}</ion-button
+      >
+    </ion-col>
+
+    <ion-col size="3"></ion-col>
+  </ion-row>
+  <ion-row style="margin-top: 50px">
+    <ion-col size="3" offset="4">
+      <ion-chip class="chip" outline="true" color="primary" size="large">
+        <ion-icon style="font-size: 28px" name="alarm-outline"></ion-icon>
+        <ion-label style="font-size: 20px">{{timeLeft}}</ion-label>
+      </ion-chip>
+    </ion-col>
+  </ion-row>
+</ion-content>
