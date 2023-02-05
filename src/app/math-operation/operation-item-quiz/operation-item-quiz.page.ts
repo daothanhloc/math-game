@@ -10,120 +10,134 @@ import { ResponseQuiz } from '../models/ResponseQuiz.model';
   styleUrls: ['./operation-item-quiz.page.scss'],
 })
 export class OperationItemQuizPage implements OnInit {
-  mathOperation:MathOperation;
-  value1:number=0;
-  value2:number=0;
-  operation:string="";
-  response:number=0;
-  responseList:ResponseQuiz[]=[];
-  countNbrCorrect:number=0;
-  countNbrNotCorrect:number=0;
-  nbrQuestionPassed:number=1;
-  progressValue:number=0.1;
+  mathOperation: MathOperation;
+  value1: number = 0;
+  value2: number = 0;
+  operation: string = "";
+  response: number = 0;
+  responseList: ResponseQuiz[] = [];
+  countNbrCorrect: number = 0;
+  countNbrNotCorrect: number = 0;
+  nbrQuestionPassed: number = 1;
+  progressValue: number = 0.1;
   timeLeft: number = 15;
   interval;
-  constructor(private activatedRouter:ActivatedRoute,
-    private mathOperationService:MathOperationService,private router:Router) { }
+  constructor(private activatedRouter: ActivatedRoute,
+    private mathOperationService: MathOperationService, private router: Router) { }
 
   ngOnInit() {
- 
-      const id=this.activatedRouter.snapshot.params['id'];
-      console.log(id);
-      this.mathOperation=this.mathOperationService.getMathOperationById(+id);
-      console.log(this.mathOperation);
-      this.generateNumberRandom();
-      this.getOperation();
-      this.generateResponses();
+
+    const id = this.activatedRouter.snapshot.params['id'];
+    console.log(id);
+    this.mathOperation = this.mathOperationService.getMathOperationById(+id);
+    console.log(this.mathOperation);
+    this.generateNumberRandom();
+    this.getOperation();
+    this.generateResponses();
   }
 
-  generateNumberRandom(){
-    switch(this.mathOperation.symbol){
-      case("+"):
-               this.value1=Math.floor(Math.random()*100); 
-               this.value2=Math.floor(Math.random()*100);
-               break;
-       case("-"):
-               this.value1=Math.floor(Math.random()*100); 
-               this.value2=Math.floor(Math.random()*(this.value1));
-               break;     
-      case("x"):
-               this.value1=Math.floor(Math.random()*100); 
-               this.value2=Math.floor(Math.random()*100);
-               break; 
-      case("/"):
-               this.value1=Math.floor(Math.random()*100); 
-               this.value2=Math.floor(Math.random()*(this.value1));
-               break;              
+  generateNumberRandom() {
+    switch (this.mathOperation.symbol) {
+      // case ("+"):
+      //   this.value1 = this.getRandomInt(0, 999);
+      //   this.value2 = this.getRandomInt(0, 999);
+      //   break;
+      // case ("-"):
+      //   this.value1 = this.getRandomInt(0, 999);
+      //   this.value2 = this.getRandomInt(0, 999);
+      //   break;
+      // case ("x"):
+      //   this.value1 = Math.floor(Math.random() * 100);
+      //   this.value2 = Math.floor(Math.random() * 100);
+      //   break;
+      case ("/"):
+        this.value2 = this.getRandomInt(1, 99);
+        this.value1 = this.getRandomInt(1, 11) * this.value2;
+        break;
+      default:
+        this.value1 = this.getRandomInt(1, 999);
+        this.value2 = this.getRandomInt(1, 999);
+        break;
     }
-    console.log(this.value1,this.value2);
+    console.log(this.value1, this.value2);
   }
 
-  getOperation(){
-    this.operation=this.mathOperation.symbol;
+  getOperation() {
+    this.operation = this.mathOperation.symbol;
   }
 
-  generateResponses(){
+  generateResponses() {
     this.startTimer();
     this.initResponses();
-    switch(this.mathOperation.symbol){   
-      case "+":this.response=this.value1+this.value2;break;
-      case "-":this.response=this.value1-this.value2;break;
-      case "x":this.response=this.value1*this.value2;break;
-      case "/":this.response=this.value1/this.value2;break;
+    switch (this.mathOperation.symbol) {
+      case "+": this.response = this.value1 + this.value2; break;
+      case "-": this.response = this.value1 - this.value2; break;
+      case "x": this.response = this.value1 * this.value2; break;
+      case "/": this.response = this.value1 / this.value2; break;
     }
-    let index=Math.floor(Math.random()*4);
-    for(let i=0;i<4;i++){
-      if(i==index){
-        this.responseList[i]={id:i,value:this.response,isCorrect:true};
+    let index = Math.floor(Math.random() * 4);
+    for (let i = 0; i < 4; i++) {
+      if (i == index) {
+        this.responseList[i] = { id: i, value: this.response, isCorrect: true };
       }
-      else{
-        let value=Math.floor(Math.random()*100);
-        this.responseList[i]={id:i,value:value,isCorrect:false};
+      else {
+        let value = this.getRandomInt(this.response - 100, this.response + 100);
+        if (value == this.response) {
+          value = this.getRandomInt(this.response - 100, this.response + 100);
+        }
+        this.responseList[i] = { id: i, value: value, isCorrect: false };
       }
     }
-   
-}
-initResponses(){
-for(let i=0;i<4;i++){
-  this.responseList.push({id:0,value:0,isCorrect:false});
-}
 
-}
-checkIfCorrectAnsewrs(value){
-  console.log(value);
-if(value==this.response){
-this.countNbrCorrect++;
-}
-else{
-  this.countNbrNotCorrect++;
-}
-if(this.nbrQuestionPassed==10){
-  console.log('navigate');
-  this.router.navigate(['math-operation']);
-
-  console.log("master");
-}
-this.generateNumberRandom();
- this.getOperation();
-this.generateResponses();
-this.nbrQuestionPassed++;
-this.progressValue=this.nbrQuestionPassed/10;
-}
-
-startTimer() {
-  this.pauseTimer();
-  this.timeLeft=15;
-  this.interval = setInterval(() => {
-    if(this.timeLeft > 0) {
-      this.timeLeft--;
-    } else {
-      this.timeLeft = 15;
+  }
+  initResponses() {
+    for (let i = 0; i < 4; i++) {
+      this.responseList.push({ id: 0, value: 0, isCorrect: false });
     }
-  },1000)
-}
 
-pauseTimer() {
-  clearInterval(this.interval);
-}
+  }
+  checkIfCorrectAnsewrs(value) {
+    console.log(value);
+    if (value == this.response) {
+      this.countNbrCorrect++;
+    }
+    else {
+      this.countNbrNotCorrect++;
+    }
+    if (this.nbrQuestionPassed == 10) {
+      console.log('navigate');
+      this.router.navigate(['math-operation']);
+
+      console.log("master");
+    }
+    this.generateNumberRandom();
+    this.getOperation();
+    this.generateResponses();
+    this.nbrQuestionPassed++;
+    this.progressValue = this.nbrQuestionPassed / 10;
+  }
+
+  startTimer() {
+    this.pauseTimer();
+    this.timeLeft = 15;
+    this.interval = setInterval(() => {
+      if (this.timeLeft > 0) {
+        this.timeLeft--;
+      } else {
+        this.timeLeft = 15;
+        this.checkIfCorrectAnsewrs(NaN)
+      }
+    }, 1000)
+  }
+
+  pauseTimer() {
+    clearInterval(this.interval);
+  }
+
+  getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
 
 }
